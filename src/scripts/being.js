@@ -1,15 +1,17 @@
 class Being {
-    constructor(position, size, color) {
+    constructor(position, maxSize, color, speed) {
         this.position = position;
         this.age = 0;
-        this.size = size;
+        this.size = 5;
+        this.maxSize = maxSize;
         this.color = color;
-        this.speed = 1;
+        this.speed = speed;
         this.maxAge = 1000;
     }
 
     update(beings) {
         this.age++;
+        this.size = Math.min(this.size + Math.min(this.age / this.maxAge, 1) * (this.maxSize-this.size), this.maxSize);
         if (this.age >= this.maxAge) {
             beings.splice(beings.indexOf(this), 1);
         }
