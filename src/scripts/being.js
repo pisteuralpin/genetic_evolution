@@ -1,17 +1,24 @@
+import { normalDraw } from "./utility.js";
+
 class Being {
-    constructor(position, maxSize, color, speed) {
+    constructor(position, maxAge, maxSize, color, speed) {
         this.position = position;
         this.age = 0;
+        this.maxAge = maxAge;
         this.size = 5;
         this.maxSize = maxSize;
+        // At 20% of maxAge, the being will be at max size
+        this.growthRate = (this.maxSize - this.size) / (this.maxAge * normalDraw(0.2, 0.05));
         this.color = color;
         this.speed = speed;
-        this.maxAge = 1000;
     }
 
     update(beings) {
         this.age++;
-        this.size = Math.min(this.size + Math.min(this.age / this.maxAge, 1) * (this.maxSize-this.size), this.maxSize);
+        console.log(this.age / this.maxAge);
+        if (this.size < this.maxSize) {
+            this.size += this.growthRate;
+        }
         if (this.age >= this.maxAge) {
             beings.splice(beings.indexOf(this), 1);
         }
