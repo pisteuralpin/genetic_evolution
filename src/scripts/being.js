@@ -15,6 +15,35 @@ const tasks = [
     }
 ];
 
+function makeChild(parent1, parent2) {
+    let parent1Prominence = normalDraw(.5, .05, .25, .75);
+    const maxAge = Math.floor((parent1.maxAge * parent1Prominence + parent2.maxAge * (1 - parent1Prominence)));
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    const maxSize = Math.floor((parent1.maxSize * parent1Prominence + parent2.maxSize * (1 - parent1Prominence)));
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    const color = [
+        Math.floor(parent1.color[0] * parent1Prominence + parent2.color[0] * (1 - parent1Prominence)),
+        Math.floor(parent1.color[1] * parent1Prominence + parent2.color[1] * (1 - parent1Prominence)),
+        Math.floor(parent1.color[2] * parent1Prominence + parent2.color[2] * (1 - parent1Prominence))
+    ];
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    const speed = parent1.speed * parent1Prominence + parent2.speed * (1 - parent1Prominence);
+    let child = new Being(
+        { x: parent1.position.x, y: parent1.position.y },
+        maxAge,
+        maxSize,
+        color,
+        speed
+    );
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    child.sociability = parent1.sociability * parent1Prominence + parent2.sociability * (1 - parent1Prominence);
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    child.tolerance = parent1.tolerance * parent1Prominence + parent2.tolerance * (1 - parent1Prominence);
+    parent1Prominence = normalDraw(.5, .05, .25, .75);
+    child.morality = parent1.morality * parent1Prominence + parent2.morality * (1 - parent1Prominence);
+    return child;
+}
+
 class Being {
     constructor(position, maxAge, maxSize, color, speed) {
         this.position = position;
@@ -93,14 +122,14 @@ class Being {
     }
 
     performTask(beings) {
-        if (this.currentTask.name === 'chilling') {
-            if (this.currentTask.end === 'time') {
+        if (this.currentTask.name == 'chilling') {
+            if (this.currentTask.end == 'time') {
                 this.currentTask.duration--;
             }
         }
-        else if (this.currentTask.name === 'moving') {
-            if (this.currentTask.end === 'goal') {
-                if (this.currentTask.goal === null) {
+        else if (this.currentTask.name == 'moving') {
+            if (this.currentTask.end == 'goal') {
+                if (this.currentTask.goal == null) {
                     if(Math.random() < this.sociability) {
                         this.meetChooseGoal(beings);
                     }
@@ -144,7 +173,7 @@ class Being {
                     this.position.y += dy / distance * this.speed;
                 }
                 else {
-                    this.currentTask = null;
+                    this.currentTask.goal = null;
                 }
             }
         }
@@ -155,6 +184,12 @@ class Being {
             else {
                 this.currentTask.with.forEach(being => {
                     if (Math.random() < 0.3) {
+                        this.currentTask.with.splice(this.currentTask.with.indexOf(being), 1);
+                        being.currentTask.with.splice(being.currentTask.with.indexOf(this), 1);
+                    }
+                    if (Math.random() < 0.3) {
+                        console.log('reproduce');
+                        beings.push(makeChild(this, being));
                         this.currentTask.with.splice(this.currentTask.with.indexOf(being), 1);
                         being.currentTask.with.splice(being.currentTask.with.indexOf(this), 1);
                     }
