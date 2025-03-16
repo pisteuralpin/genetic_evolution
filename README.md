@@ -1,5 +1,6 @@
 # Simulation of a population
 Simulation of a population made with vanilla JS.
+Attribution is appreciated ^^
 
 ## Current behavior
 - Each individual is a colored circle

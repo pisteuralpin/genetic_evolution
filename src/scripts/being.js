@@ -39,13 +39,14 @@ class Being {
             beings.splice(beings.indexOf(this), 1);
         }
 
-        if (this.currentTask === null) {
+        if (this.currentTask == null) {
             this.decideTask();
         }
         else {
             this.performTask(beings);
         }
-        if (this.currentTask !== null && this.currentTask.end === 'time' && this.currentTask.duration <= 0) {
+
+        if (this.currentTask != null && this.currentTask.end == 'time' && this.currentTask.duration <= 0) {
             this.currentTask = null;
         }
     }
@@ -57,10 +58,10 @@ class Being {
             random -= tasks[i].weight;
             if (random <= 0) {
                 this.currentTask = { ...tasks[i] };
-                if (this.currentTask.end === 'time') {
+                if (this.currentTask.end == 'time') {
                     this.currentTask.duration = normalDraw(this.currentTask.mean_duration, this.currentTask.stdev_duration, 0);
                 }
-                else if (this.currentTask.end === 'goal') {
+                else if (this.currentTask.end == 'goal') {
                     this.currentTask.goal = null;
                 }
                 break;
@@ -84,6 +85,7 @@ class Being {
                 }
                 const dx = this.currentTask.goal.x - this.position.x;
                 const dy = this.currentTask.goal.y - this.position.y;
+                    
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance > this.speed) {
                     this.position.x += dx / distance * this.speed;
